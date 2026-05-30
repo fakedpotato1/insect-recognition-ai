@@ -115,48 +115,52 @@ function UploadBox({ onFileSelect, onDetect }) {
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={`
-          h-72 rounded-xl border-2 border-dashed
+          h-52 sm:h-72 rounded-xl border-2 border-dashed
           flex items-center justify-center
-          transition
+          transition cursor-pointer
           ${
             isDragging
               ? "border-cyan-400 bg-cyan-100"
-              : "border-slate-700 hover:border-slate-500"
+              : "border-slate-300 hover:border-cyan-400 hover:bg-cyan-50"
           }
         `}
       >
         {!preview ? (
           <div className="text-center px-4">
-            <p className="text-slate-300 text-lg font-medium">
+            {/* Hide drag hint on mobile — not relevant for touch */}
+            <p className="hidden sm:block text-slate-400 text-lg font-medium">
               Drag & Drop Image Here
             </p>
+            <p className="sm:hidden text-slate-400 text-base font-medium">
+              Tap to select an image
+            </p>
 
-            <p className="text-slate-500 text-sm mt-2">
+            <p className="text-slate-400 text-sm mt-2">
               or choose an option below
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mt-5">
-              {/* Primary — solid */}
+              {/* Primary — solid, full width on mobile */}
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   openFilePicker();
                 }}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-cyan-700 hover:bg-cyan-800 text-cyan-50 font-medium rounded-lg transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 bg-cyan-700 hover:bg-cyan-800 text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
               >
                 <Upload size={16} />
                 Upload Photo
               </button>
 
-              {/* Secondary — outline */}
+              {/* Secondary — outline, full width on mobile */}
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   openCamera();
                 }}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 border-2 border-cyan-700 text-cyan-600 hover:bg-cyan-700 hover:text-cyan-50 font-medium rounded-lg transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 border-2 border-cyan-700 text-cyan-700 hover:bg-cyan-700 hover:text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
               >
                 <Camera size={16} />
                 Take Photo
@@ -196,12 +200,12 @@ function UploadBox({ onFileSelect, onDetect }) {
 
       {/* Actions after image selected */}
       {preview && (
-        <div className="flex gap-3 mt-4">
+        <div className="flex flex-col sm:flex-row gap-3 mt-4">
           {/* Change Photo — outline, secondary */}
           <button
             type="button"
             onClick={openFilePicker}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-cyan-700 text-cyan-600 hover:bg-cyan-700 hover:text-cyan-50 font-medium rounded-lg transition-colors"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 border-2 border-cyan-700 text-cyan-700 hover:bg-cyan-700 hover:text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
           >
             <RefreshCw size={16} />
             Change Photo
@@ -211,7 +215,7 @@ function UploadBox({ onFileSelect, onDetect }) {
           <button
             type="button"
             onClick={handleDetect}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-700 hover:bg-cyan-800 text-cyan-50 font-medium rounded-lg transition-colors"
+            className="w-full sm:flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 bg-cyan-700 hover:bg-cyan-800 text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
           >
             <ScanSearch size={16} />
             Detect!
