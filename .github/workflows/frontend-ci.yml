@@ -1,0 +1,38 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: ["developer", "main"]
+    paths:
+      - 'fronted/**' # Only changes happened under frontend/
+  pull_request:
+    branches: ["developer", "main"]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  fronted-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # stable
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Lint JS and JSX
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Build Frontend (Checks CSS/HTML/Vite Config)
+        run: |
+          cd frontend
+          npm run build
