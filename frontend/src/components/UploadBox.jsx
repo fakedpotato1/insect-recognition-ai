@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { X, Upload, Camera, RefreshCw, ScanSearch } from "lucide-react";
 
-function UploadBox({ onFileSelect, onDetect }) {
+function UploadBox({ onFileSelect, onDetect, onReset }) {
   const inputRef = useRef(null);
   const cameraRef = useRef(null);
 
@@ -59,9 +59,8 @@ function UploadBox({ onFileSelect, onDetect }) {
     inputRef.current && (inputRef.current.value = "");
     cameraRef.current && (cameraRef.current.value = "");
 
-    if (onFileSelect) {
-      onFileSelect(null);
-    }
+    if (onFileSelect) onFileSelect(null);
+    if (onReset) onReset();      // ← clears error and result in App.jsx
   };
 
   const handleDetect = () => {
