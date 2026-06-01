@@ -1,0 +1,16 @@
+name: Check PR Source Branch
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    if: github.head_ref != 'develop'
+    steps:
+      - name: Report Invalid Branch
+        run: |
+          echo "::error::ERROR: You can only merge into 'main' from the 'develop' branch! Current branch is '${{ github.head_ref }}'."
+          exit 1
