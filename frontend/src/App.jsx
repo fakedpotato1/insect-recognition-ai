@@ -2,7 +2,7 @@ import { useState } from "react";
 import UploadBox from "./components/UploadBox";
 import ResultModal from "./components/ResultModal";
 import logo from "../assets/logo.png";
-import { detectInsect } from "./api/detectApi";
+import { detectInsect } from "./api/DetectApi";
 
 function App() {
   const [result, setResult] = useState(null);
