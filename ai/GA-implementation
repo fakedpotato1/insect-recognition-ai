@@ -1,0 +1,66 @@
+import random
+import numpy as np
+
+class GeneticAlgorithm:
+
+    def __init__(self,
+                 pop_size=50,
+                 chromosome_length=10,
+                 mutation_rate=0.1):
+
+        self.pop_size = pop_size
+        self.chromosome_length = chromosome_length
+        self.mutation_rate = mutation_rate
+
+    def initialize_population(self):
+        return np.random.randint(
+            0,
+            2,
+            (self.pop_size,
+             self.chromosome_length)
+        )
+
+    def fitness(self, chromosome):
+        return np.sum(chromosome)
+
+    # Selection
+    def selection(self, population):
+
+        idx1, idx2 = random.sample(
+            range(len(population)),
+            2
+        )
+
+        return (
+            population[idx1]
+            if self.fitness(population[idx1])
+            >
+            self.fitness(population[idx2])
+            else
+            population[idx2]
+        )
+
+    # Crossover
+    def crossover(self, parent1, parent2):
+
+        point = random.randint(
+            1,
+            self.chromosome_length - 1
+        )
+
+        child = np.concatenate([
+            parent1[:point],
+            parent2[point:]
+        ])
+
+        return child
+
+    # Mutation
+    def mutation(self, chromosome):
+
+        for i in range(len(chromosome)):
+
+            if random.random() < self.mutation_rate:
+                chromosome[i] = 1 - chromosome[i]
+
+        return chromosome
