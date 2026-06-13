@@ -2,6 +2,7 @@ import unittest
 
 import numpy as np
 
+from ai.evolutionary import GeneticAlgorithm, PSO
 from ai.neural_network import DenseLayer, MLPClassifier, softmax, softmax_cross_entropy
 from ai.optimization import GeneticAlgorithmBP, ParticleSwarmBP
 
@@ -82,6 +83,7 @@ class OptimizedBPTests(unittest.TestCase):
 
         history = ga_bp.optimize_initial_weights(self.X, self.y)
 
+        self.assertIsInstance(ga_bp, GeneticAlgorithm)
         self.assertTrue(np.isfinite(history["best_loss"]))
         self.assertEqual(len(history["optimizer_loss"]), 4)
         self.assertEqual(ga_bp.predict(self.X).shape, (6,))
@@ -92,6 +94,7 @@ class OptimizedBPTests(unittest.TestCase):
 
         history = pso_bp.optimize_initial_weights(self.X, self.y)
 
+        self.assertIsInstance(pso_bp, PSO)
         self.assertTrue(np.isfinite(history["best_loss"]))
         self.assertEqual(len(history["optimizer_loss"]), 5)
         self.assertEqual(pso_bp.predict(self.X).shape, (6,))

@@ -1,10 +1,11 @@
 import numpy as np
 
+from ai.evolutionary import GeneticAlgorithm
 from ai.neural_network.mlp import MLPClassifier
 
 
-class GeneticAlgorithmBP:
-    """Use a genetic algorithm to initialize a NumPy BP neural network."""
+class GeneticAlgorithmBP(GeneticAlgorithm):
+    """Adapt the evo-baselines genetic algorithm to initialize a BP network."""
 
     def __init__(
         self,
@@ -18,86 +19,47 @@ class GeneticAlgorithmBP:
         initial_noise=0.5,
         random_state=None,
     ):
-        if population_size < 2:
-            raise ValueError("population_size must be at least 2")
-        if elite_count < 1 or elite_count >= population_size:
-            raise ValueError("elite_count must be in [1, population_size)")
-
         self.model = model
         self.population_size = int(population_size)
         self.generations = int(generations)
-        self.elite_count = int(elite_count)
-        self.crossover_rate = float(crossover_rate)
-        self.mutation_rate = float(mutation_rate)
-        self.mutation_scale = float(mutation_scale)
         self.initial_noise = float(initial_noise)
-        self.rng = np.random.default_rng(random_state)
         self.history_ = None
+        self._X = None
+        self._y = None
 
-    def _evaluate_population(self, population, X, y):
-        losses = []
-        for chromosome in population:
-            self.model.set_parameters_vector(chromosome)
-            losses.append(self.model.loss(X, y))
-        return np.asarray(losses, dtype=float)
-
-    def _select_parent(self, population, losses, tournament_size=3):
-        sample_size = min(tournament_size, self.population_size)
-        indices = self.rng.choice(self.population_size, size=sample_size, replace=False)
-        best_index = indices[np.argmin(losses[indices])]
-        return population[best_index]
-
-    def _crossover(self, parent_a, parent_b):
-        if self.rng.random() > self.crossover_rate:
-            return parent_a.copy(), parent_b.copy()
-
-        mask = self.rng.random(parent_a.size) < 0.5
-        child_a = np.where(mask, parent_a, parent_b)
-        child_b = np.where(mask, parent_b, parent_a)
-        return child_a, child_b
-
-    def _mutate(self, chromosome):
-        mutation_mask = self.rng.random(chromosome.size) < self.mutation_rate
-        noise = self.rng.normal(0.0, self.mutation_scale, size=chromosome.size)
-        return chromosome + mutation_mask * noise
-
-    def optimize_initial_weights(self, X, y):
-        base_parameters = self.model.get_parameters_vector()
-        population = base_parameters + self.rng.normal(
-            0.0,
-            self.initial_noise,
-            size=(self.population_size, base_parameters.size),
+        super().__init__(
+            pop_size=population_size,
+            chromosome_length=model.parameter_count(),
+            mutation_rate=mutation_rate,
+            crossover_rate=crossover_rate,
+            elite_count=elite_count,
+            encoding="real",
+            mutation_scale=mutation_scale,
+            maximize=False,
+            random_state=random_state,
         )
 
-        best_loss = np.inf
-        best_chromosome = base_parameters.copy()
-        loss_history = []
+    def fitness(self, chromosome):
+        if self._X is None or self._y is None:
+            raise RuntimeError("training data must be set before evaluating fitness")
+        self.model.set_parameters_vector(chromosome)
+        return self.model.loss(self._X, self._y)
 
-        for _ in range(self.generations):
-            losses = self._evaluate_population(population, X, y)
-            best_index = int(np.argmin(losses))
-            if losses[best_index] < best_loss:
-                best_loss = float(losses[best_index])
-                best_chromosome = population[best_index].copy()
-
-            loss_history.append(best_loss)
-            order = np.argsort(losses)
-            next_population = [population[i].copy() for i in order[: self.elite_count]]
-
-            while len(next_population) < self.population_size:
-                parent_a = self._select_parent(population, losses)
-                parent_b = self._select_parent(population, losses)
-                child_a, child_b = self._crossover(parent_a, parent_b)
-                next_population.append(self._mutate(child_a))
-                if len(next_population) < self.population_size:
-                    next_population.append(self._mutate(child_b))
-
-            population = np.asarray(next_population, dtype=float)
+    def optimize_initial_weights(self, X, y):
+        self._X = np.asarray(X, dtype=float)
+        self._y = np.asarray(y, dtype=int)
+        base_parameters = self.model.get_parameters_vector()
+        result = self.evolve(
+            generations=self.generations,
+            center=base_parameters,
+            noise_scale=self.initial_noise,
+        )
+        best_chromosome = result["best_chromosome"]
 
         self.model.set_parameters_vector(best_chromosome)
         self.history_ = {
-            "best_loss": best_loss,
-            "optimizer_loss": loss_history,
+            "best_loss": result["best_score"],
+            "optimizer_loss": result["best_history"],
             "best_parameters": best_chromosome.copy(),
         }
         return self.history_
