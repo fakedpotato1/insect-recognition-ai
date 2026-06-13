@@ -1,0 +1,62 @@
+import numpy as np
+
+class PSO:
+
+    def __init__(self,
+                 num_particles=30,
+                 dimensions=2):
+
+        self.num_particles = num_particles
+        self.dimensions = dimensions
+
+        self.positions = np.random.uniform(
+            -10, 10,
+            (num_particles, dimensions)
+        )
+
+        self.velocities = np.zeros(
+            (num_particles, dimensions)
+        )
+
+        self.personal_best = self.positions.copy()
+
+    def objective(self, x):
+        return np.sum(x**2)
+
+    def update_velocity(
+            self,
+            particle,
+            global_best,
+            w=0.7,
+            c1=1.5,
+            c2=1.5):
+
+        r1 = np.random.rand(self.dimensions)
+        r2 = np.random.rand(self.dimensions)
+
+        cognitive = (
+            c1 *
+            r1 *
+            (self.personal_best[particle]
+             - self.positions[particle])
+        )
+
+        social = (
+            c2 *
+            r2 *
+            (global_best
+             - self.positions[particle])
+        )
+
+        self.velocities[particle] = (
+            w *
+            self.velocities[particle]
+            + cognitive
+            + social
+        )
+
+    def update_position(self, particle):
+
+        self.positions[particle] += (
+            self.velocities[particle]
+        )
