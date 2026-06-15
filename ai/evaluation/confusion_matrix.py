@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def confusion_matrix(y_true, y_pred, num_classes):
     """
     Construct num_classes x num_classes Confusion Matrix
@@ -14,6 +15,7 @@ def confusion_matrix(y_true, y_pred, num_classes):
         matrix[yt, yp] += 1
 
     return matrix
+
 
 def print_confusion_matrix(matrix):
     """

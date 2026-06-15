@@ -2,7 +2,7 @@ import numpy as np
 
 
 class GeneticAlgorithm:
-    """Reusable genetic algorithm based on the evo-baselines implementation."""
+    """Reusable genetic algorithm implemented with NumPy."""
 
     def __init__(
         self,

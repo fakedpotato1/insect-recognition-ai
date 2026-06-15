@@ -5,7 +5,7 @@ from ai.neural_network.mlp import MLPClassifier
 
 
 class GeneticAlgorithmBP(GeneticAlgorithm):
-    """Adapt the evo-baselines genetic algorithm to initialize a BP network."""
+    """Use the project genetic algorithm to initialize a BP network."""
 
     def __init__(
         self,

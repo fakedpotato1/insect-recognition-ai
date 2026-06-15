@@ -2,7 +2,7 @@ import numpy as np
 
 
 class PSO:
-    """Reusable particle swarm optimizer based on the evo-baselines implementation."""
+    """Reusable particle swarm optimizer implemented with NumPy."""
 
     def __init__(
         self,
