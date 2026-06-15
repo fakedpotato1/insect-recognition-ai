@@ -32,16 +32,13 @@ jobs:
 
       - name: Run Python unit tests
         run: |
-          python - <<'PY'
-          import sys
-          import unittest
-
-          suite = unittest.defaultTestLoader.discover("ai/tests", pattern="*tests.py")
-          test_count = suite.countTestCases()
-          print(f"Discovered {test_count} Python tests")
-          if test_count == 0:
-              sys.exit(0)
-
-          result = unittest.TextTestRunner(verbosity=2).run(suite)
-          sys.exit(0 if result.wasSuccessful() else 1)
-          PY
+          if [ ! -d ai/tests ]; then
+            echo "No ai/tests directory found; skipping Python unit tests."
+            exit 0
+          fi
+          if ! find ai/tests -maxdepth 1 -type f -name "*tests.py" -print -quit | grep -q .; then
+            echo "No AI unit test files found; skipping Python unit tests."
+            exit 0
+          fi
+          touch ai/__init__.py ai/tests/__init__.py
+          python -m unittest discover -s ai/tests -p "*tests.py"
