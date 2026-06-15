@@ -32,6 +32,10 @@ htmlcov/
 # Logs
 *.log
 
+# Generated ML artifacts
+models/
+/features.csv
+
 # =========================
 # IDE / Editor
 # =========================
