@@ -2,7 +2,6 @@ import random
 
 
 def predict(image_base64: str):
-
     scenario = random.choice([
         "low",
         "medium",
@@ -20,5 +19,7 @@ def predict(image_base64: str):
 
     return {
         "insect_name": "Ant",
-        "confidence": confidence
+        "confidence": confidence,
+        "class_id": 0,
+        "label": "ant",
     }
