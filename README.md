@@ -5,7 +5,9 @@
 This project is an insect image recognition system for a practical AI
 coursework. The system is designed around traditional image features and
 hand-written machine learning algorithms instead of pre-trained deep learning
-models.
+models. Feature extraction can use external models, while the core classifier
+uses the project's BP neural network with PSO/GA weight initialization. KNN,
+decision tree, and Naive Bayes are kept as sklearn comparison baselines.
 
 The target pipeline is:
 
@@ -13,8 +15,8 @@ The target pipeline is:
 Image input
   -> Image preprocessing
   -> Feature extraction
-  -> NumPy BP neural network classifier
   -> GA/PSO weight initialization
+  -> NumPy BP neural network classifier
   -> Prediction result and insect information
 ```
 
@@ -25,7 +27,7 @@ added by separate project tasks.
 
 ```text
 insect-recognition-ai/
-|-- ai/          AI algorithms, optimization, evaluation, and tests
+|-- ai/          AI algorithms, baselines, optimization, evaluation, and tests
 |-- backend/     Flask API and model service integration
 |-- frontend/    Vite React user interface
 |-- docs/        Reports, design notes, and presentation material
@@ -49,8 +51,11 @@ Planned algorithm responsibilities:
 
 - `ai/neural_network/`: hand-written Dense layers, forward propagation,
   backpropagation, Softmax, cross-entropy loss, and an MLP classifier.
+- `ai/evolutionary/`: hand-written GA and PSO optimizers.
 - `ai/optimization/`: GA-BP and PSO-BP integration that maps all network
   weights and biases into one vector for global initialization.
+- `ai/baselines/`: sklearn KNN, decision tree, and Naive Bayes models for
+  comparison only.
 - `ai/evaluation/`: accuracy, confusion matrix, precision, recall, and F1
   metrics.
 
@@ -82,7 +87,16 @@ npm run dev
 ### AI Tests
 
 ```bash
-python -m unittest discover -s ai/tests -p "*tests.py"
+python -m unittest discover -s ai/tests -p "*_tests.py"
+```
+
+### Model Comparison
+
+After feature extraction writes a CSV file, compare the hand-written AI models
+against sklearn baselines with:
+
+```bash
+python -m ai.experiments.model_comparison features.csv --label-column label
 ```
 
 ## Coursework Notes
