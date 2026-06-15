@@ -32,6 +32,9 @@ jobs:
 
       - name: Run Python unit tests
         run: |
+          if [ -d backend/tests ]; then
+            python -m unittest discover -s backend/tests -p "*test*.py"
+          fi
           if [ ! -d ai/tests ]; then
             echo "No ai/tests directory found; skipping Python unit tests."
             exit 0

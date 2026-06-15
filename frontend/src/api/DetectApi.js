@@ -1,4 +1,9 @@
-const API_URL = "http://localhost:5000/detect";
+const DEFAULT_API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL
+).replace(/\/$/, "");
+
+const buildApiUrl = (path) => `${API_BASE_URL}${path}`;
 
 /**
  * Converts an image File object to a base64 string (without the prefix).
@@ -20,8 +25,8 @@ export async function detectInsect(file) {
   // Step 1: convert image to base64
   const image_base64 = await toBase64(file);
 
-  // Step 2: POST to Flask /detect endpoint
-  const response = await fetch(API_URL, {
+  // Step 2: POST to Flask detection endpoint
+  const response = await fetch(buildApiUrl("/api/detect"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ image: image_base64 }),
@@ -37,4 +42,24 @@ export async function detectInsect(file) {
   // Expected response shape: { insect_name: "...", confidence: 0.95 }
   const data = await response.json();
   return data;
+}
+
+export async function getAiStatus() {
+  const response = await fetch(buildApiUrl("/api/ai/status"));
+
+  if (!response.ok) {
+    throw new Error(`Server error: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function getAiContract() {
+  const response = await fetch(buildApiUrl("/api/ai/contract"));
+
+  if (!response.ok) {
+    throw new Error(`Server error: ${response.status}`);
+  }
+
+  return response.json();
 }
