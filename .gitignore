@@ -19,6 +19,7 @@ dist/
 venv/
 env/
 .venv/
+.venv-*/
 ENV/
 
 # Testing / coverage
@@ -35,6 +36,8 @@ htmlcov/
 # Generated ML artifacts
 models/
 /features.csv
+.tmp/
+.pip-cache/
 
 # =========================
 # IDE / Editor
