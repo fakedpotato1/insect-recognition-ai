@@ -37,8 +37,7 @@ export function useInsectData() {
    */
   const normalise = (name) =>
     name
-      .toLowerCase()
-      .replace(/[\s\-]+/g, "");
+      .toLowerCase().replace(/[\s-]+/g, "");
 
   /**
    * Returns the matching insect record or null if not found / data not loaded.

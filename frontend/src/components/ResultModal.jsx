@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { X, AlertTriangle, XCircle, ChevronDown, ChevronUp, Zap, TrendingUp, Star, TrendingDown, StarOff } from "lucide-react";
+import { X, AlertTriangle, XCircle, ChevronDown, ChevronUp, TrendingUp, Star, TrendingDown} from "lucide-react";
 import { useInsectData } from "../api/useInsectData";
 
 // ─── Design tokens (mirrors InsectEncyclopedia) ───────────────────────────────
@@ -22,8 +22,7 @@ function resolveInsectStyle(insectData) {
 
   const imp = (insectData.impact || "").toLowerCase();
   const isBeneficial = imp.startsWith("beneficial");
-  const isHarmful    = imp.startsWith("harmful");
-  const isBoth       = imp === "both";
+  const isBoth       = imp === "harmful & beneficial"
 
   const status = isBoth ? "both" : isBeneficial ? "beneficial" : "harmful";
 
@@ -56,11 +55,10 @@ function resolveInsectStyle(insectData) {
     slug:           { color: "#4B5563", bg: "#F3F4F6", emoji: "🐌" },
     snail:          { color: "#92400E", bg: "#FEF3C7", emoji: "🐌" },
     tiger_mosquito:  { color: "#1D4ED8", bg: "#EFF6FF", emoji: "🦟" },
-    "tiger_mosquito":{ color: "#1D4ED8", bg: "#EFF6FF", emoji: "🦟" },
     wasp:           { color: "#CA8A04", bg: "#FEF9C3", emoji: "🐝" },
   };
 
-  const key = insectData.key || insectData.name?.toLowerCase().replace(/[\s\-]+/g, "");
+  const key = insectData.key || insectData.name?.toLowerCase().replace(/[\s-]+/g, "");
   const theme = INSECT_THEMES[key] || INSECT_THEMES[insectData.name?.toLowerCase()] || {
     color: "#6366F1", bg: "#EEF2FF", emoji: "🐛",
   };
@@ -162,7 +160,7 @@ function ConfidenceBar({ confidence, accentColor }) {
 }
 
 // ─── Stat pill (mirrors encyclopedia StatPill) ────────────────────────────────
-function StatPill({ label, value, bg, accentColor }) {
+function StatPill({ label, value}) {
   return (
     <div
       className="flex flex-col items-center justify-center rounded-xl p-2.5 border min-w-0"
