@@ -5,7 +5,7 @@ from ai.neural_network.mlp import MLPClassifier
 
 
 class ParticleSwarmBP(PSO):
-    """Adapt the evo-baselines particle swarm optimizer to initialize BP weights."""
+    """Use the project particle swarm optimizer to initialize BP weights."""
 
     def __init__(
         self,

@@ -94,7 +94,7 @@ class MLPClassifier:
 
             epoch_losses = []
             for start in range(0, sample_count, batch_size):
-                batch_indices = indices[start : start + batch_size]
+                batch_indices = indices[start:start + batch_size]
                 batch_loss = self.train_batch(
                     features[batch_indices], labels[batch_indices]
                 )
