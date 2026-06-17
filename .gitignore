@@ -38,6 +38,11 @@ models/
 /features.csv
 .tmp/
 .pip-cache/
+/attempt.zip
+/outputs.rar
+/ai/feature-new/
+/ai/feature-new/outputs/
+/ai/training/outputs/
 
 # =========================
 # IDE / Editor
