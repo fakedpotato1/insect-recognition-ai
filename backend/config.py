@@ -6,7 +6,7 @@ load_dotenv()
 
 class Config:
     USE_MOCK_MODEL = (
-        os.getenv("USE_MOCK_MODEL", "true")
+        os.getenv("USE_MOCK_MODEL", "false")
         .lower()
         == "true"
     )
@@ -17,7 +17,12 @@ class Config:
 
     MODEL_ARTIFACT_PATH = os.getenv(
         "MODEL_ARTIFACT_PATH",
-        "../models/insect_classifier.npz"
+        "../ai/model/dinov2_bp_classifier.npz"
+    )
+
+    MODEL_FEATURE_EXTRACTOR = os.getenv(
+        "MODEL_FEATURE_EXTRACTOR",
+        "dinov2"
     )
 
     LOCALIZATION_MODE = os.getenv(
@@ -27,4 +32,14 @@ class Config:
 
     LOCALIZATION_MIN_AREA_RATIO = float(
         os.getenv("LOCALIZATION_MIN_AREA_RATIO", "0.002")
+    )
+
+    DINOV2_MODEL = os.getenv(
+        "DINOV2_MODEL",
+        "facebook/dinov2-small"
+    )
+
+    DINOV2_DEVICE = os.getenv(
+        "DINOV2_DEVICE",
+        "auto"
     )
