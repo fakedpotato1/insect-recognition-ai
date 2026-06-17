@@ -1,0 +1,24 @@
+{
+  "artifact": "ai\\model\\dinov2_bp_classifier.npz",
+  "fit_seconds": 9.798436403274536,
+  "input_dim": 384,
+  "metrics": {
+    "test": {
+      "accuracy": 0.758341128780792,
+      "loss": 1.2089755363807335,
+      "macro_f1": 0.7539656874429823
+    },
+    "train": {
+      "accuracy": 1.0,
+      "loss": 0.006912228259131668,
+      "macro_f1": 1.0
+    },
+    "val": {
+      "accuracy": 0.7668240850059032,
+      "loss": 1.2182545734275378,
+      "macro_f1": 0.7809709964789122
+    }
+  },
+  "output_dim": 20,
+  "samples": 16595
+}
