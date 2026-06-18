@@ -17,13 +17,13 @@ CLASS_NAMES = (
     "slug",
     "snail",
     "spider",
-    "tiger mosquito",
+    "tiger_mosquito",
     "wasp",
 )
 
 
 def display_name(label):
-    return str(label).replace("-", " ").title()
+    return str(label).replace("-", " ").replace("_", " ").title()
 
 
 def class_metadata(raw_label, encoded_index):

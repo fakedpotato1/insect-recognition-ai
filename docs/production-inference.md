@@ -29,8 +29,18 @@ Train a loadable artifact from the CSV:
 python -m ai.inference.train_classifier features.csv \
   --output models/insect_classifier.npz \
   --hidden-dims 64 \
-  --epochs 100
+  --epochs 120 \
+  --batch-size 256 \
+  --learning-rate 0.001 \
+  --optimizer adam \
+  --l2-penalty 0.008 \
+  --split-ratios 0.7,0.2,0.1
 ```
+
+Training reports train, validation, and test metrics. Use those metrics for
+model selection. After choosing hyperparameters, add `--refit-full` if you want
+the saved production artifact to be retrained on every row after reporting split
+metrics.
 
 The artifact stores:
 
@@ -38,7 +48,7 @@ The artifact stores:
 - feature normalization statistics
 - feature names
 - label mappings
-- training metadata
+- train/validation/test metrics and training metadata
 
 You can test the saved artifact locally before connecting the backend:
 

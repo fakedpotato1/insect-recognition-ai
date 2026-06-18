@@ -1,0 +1,84 @@
+{
+  "metadata": {
+    "batch_size": 256,
+    "csv": "ai\\feature-new\\outputs\\pest_dinov2_features_fast.csv",
+    "epochs": 80,
+    "feature_columns": 384,
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "input_dim": 384,
+    "l2_penalty": 0.001,
+    "learning_rate": 0.001,
+    "num_classes": 20,
+    "optimizer": "adam",
+    "random_state": 42,
+    "samples": 16595,
+    "test_samples": 3207,
+    "train_samples": 10000,
+    "val_samples": 3388
+  },
+  "results": [
+    {
+      "fit_seconds": 9.254716873168945,
+      "model": "BP",
+      "test_accuracy": 0.758341128780792,
+      "test_macro_f1": 0.7539656874429823,
+      "train_accuracy": 1.0,
+      "train_macro_f1": 1.0,
+      "val_accuracy": 0.7668240850059032,
+      "val_macro_f1": 0.7809709964789122
+    },
+    {
+      "fit_seconds": 0.0016050338745117188,
+      "model": "Dummy-most-frequent",
+      "test_accuracy": 0.07327720611163081,
+      "test_macro_f1": 0.006827425915165601,
+      "train_accuracy": 0.05,
+      "train_macro_f1": 0.0047619047619047615,
+      "val_accuracy": 0.05962219598583235,
+      "val_macro_f1": 0.00562674094707521
+    },
+    {
+      "fit_seconds": 0.03201127052307129,
+      "model": "GaussianNB",
+      "test_accuracy": 0.7100093545369505,
+      "test_macro_f1": 0.708547809522075,
+      "train_accuracy": 0.86,
+      "train_macro_f1": 0.8628600028694147,
+      "val_accuracy": 0.718417945690673,
+      "val_macro_f1": 0.7409184312279686
+    },
+    {
+      "fit_seconds": 0.005112648010253906,
+      "model": "KNN-5",
+      "test_accuracy": 0.7256002494543187,
+      "test_macro_f1": 0.7247649765319842,
+      "train_accuracy": 1.0,
+      "train_macro_f1": 1.0,
+      "val_accuracy": 0.7452774498229043,
+      "val_macro_f1": 0.7630429440324276
+    },
+    {
+      "fit_seconds": 7.832132816314697,
+      "model": "DecisionTree-balanced",
+      "test_accuracy": 0.4811350171499844,
+      "test_macro_f1": 0.4745209188806358,
+      "train_accuracy": 1.0,
+      "train_macro_f1": 1.0,
+      "val_accuracy": 0.4766824085005903,
+      "val_macro_f1": 0.4872832488913696
+    },
+    {
+      "fit_seconds": 1.3335506916046143,
+      "model": "ExtraTrees-200-balanced",
+      "test_accuracy": 0.738696601184908,
+      "test_macro_f1": 0.7335513830929213,
+      "train_accuracy": 1.0,
+      "train_macro_f1": 1.0,
+      "val_accuracy": 0.7435064935064936,
+      "val_macro_f1": 0.7611018362881127
+    }
+  ]
+}

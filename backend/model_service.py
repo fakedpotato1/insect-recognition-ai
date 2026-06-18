@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from config import Config
 
 import mock_model
@@ -25,13 +27,20 @@ CLASS_NAMES = [
     "slug",
     "snail",
     "spider",
-    "tiger mosquito",
+    "tiger_mosquito",
     "wasp",
 ]
 
 
 def _display_name(label):
-    return label.replace("-", " ").title()
+    return label.replace("-", " ").replace("_", " ").title()
+
+
+def _resolve_artifact_path():
+    artifact_path = Path(Config.MODEL_ARTIFACT_PATH)
+    if artifact_path.is_absolute():
+        return artifact_path
+    return (Path(__file__).resolve().parent / artifact_path).resolve()
 
 
 def get_model_status():
@@ -43,11 +52,25 @@ def get_model_status():
             "message": "Mock model is active for frontend/backend integration.",
         }
 
+    artifact_path = _resolve_artifact_path()
+    if artifact_path.exists():
+        return {
+            "ready": True,
+            "mode": "real",
+            "status": "ready",
+            "message": "Real DINOv2 + BP model artifact is available.",
+            "artifact_path": str(artifact_path),
+            "feature_extractor": Config.MODEL_FEATURE_EXTRACTOR,
+            "dinov2_model": Config.DINOV2_MODEL,
+        }
+
     return {
         "ready": False,
         "mode": "real",
-        "status": "not_implemented",
-        "message": "Real AI model adapter is not implemented yet.",
+        "status": "missing_artifact",
+        "message": "Real model artifact is missing.",
+        "artifact_path": str(artifact_path),
+        "feature_extractor": Config.MODEL_FEATURE_EXTRACTOR,
     }
 
 
@@ -76,10 +99,10 @@ def get_ai_contract():
             },
         },
         "feature_extraction": {
-            "purpose": "Produce the CSV consumed by training and evaluation code.",
-            "input": "dataset/{train,valid,test}/{images,labels} with YOLO txt labels",
+            "purpose": "Crop YOLO boxes and produce DINOv2 embeddings consumed by BP training and evaluation code.",
+            "input": "ai/feature-new/datasets/pest-detection-v1/{train,valid,test}/{images,labels}",
             "output_csv": {
-                "feature_columns": "feat_0 through feat_460",
+                "feature_columns": "feat_0 through feat_383",
                 "label_column": "label",
                 "row_granularity": "one row per insect crop",
             },

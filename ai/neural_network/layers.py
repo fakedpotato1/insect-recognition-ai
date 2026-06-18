@@ -57,6 +57,10 @@ class DenseLayer:
         self.weights -= learning_rate * self.grad_weights
         self.biases -= learning_rate * self.grad_biases
 
+    def apply_gradients(self, weight_step, bias_step):
+        self.weights -= np.asarray(weight_step, dtype=float)
+        self.biases -= np.asarray(bias_step, dtype=float)
+
     def parameter_count(self):
         return self.weights.size + self.biases.size
 
