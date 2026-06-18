@@ -1,22 +1,33 @@
 {
   "artifact": "ai\\model\\dinov2_bp_classifier.npz",
-  "fit_seconds": 9.798436403274536,
+  "best_epoch": 16,
+  "config": {
+    "batch_size": 256,
+    "epochs": 80,
+    "hidden_dims": [
+      96
+    ],
+    "l2_penalty": 0.005,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "random_state": 7
+  },
   "input_dim": 384,
   "metrics": {
     "test": {
-      "accuracy": 0.758341128780792,
-      "loss": 1.2089755363807335,
-      "macro_f1": 0.7539656874429823
+      "accuracy": 0.7758029310882445,
+      "loss": 0.8078302644727219,
+      "macro_f1": 0.7722693940981724
     },
     "train": {
-      "accuracy": 1.0,
-      "loss": 0.006912228259131668,
-      "macro_f1": 1.0
+      "accuracy": 0.9907,
+      "loss": 0.07796943894316138,
+      "macro_f1": 0.9907009030498941
     },
     "val": {
-      "accuracy": 0.7668240850059032,
-      "loss": 1.2182545734275378,
-      "macro_f1": 0.7809709964789122
+      "accuracy": 0.7824675324675324,
+      "loss": 0.8233318341518978,
+      "macro_f1": 0.7933574282944
     }
   },
   "output_dim": 20,
