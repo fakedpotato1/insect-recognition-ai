@@ -1,0 +1,92 @@
+[
+  {
+    "hidden_dims": "128,64",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.002,
+    "random_state": 42
+  },
+  {
+    "hidden_dims": "128,64",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.003,
+    "random_state": 42
+  },
+  {
+    "hidden_dims": "128,64",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.004,
+    "random_state": 42
+  },
+  {
+    "hidden_dims": "128,64",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.0008,
+    "optimizer": "adam",
+    "l2_penalty": 0.003,
+    "random_state": 42
+  },
+  {
+    "hidden_dims": "64",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.004,
+    "random_state": 42
+  },
+  {
+    "hidden_dims": "64",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.005,
+    "random_state": 7
+  },
+  {
+    "hidden_dims": "64",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.005,
+    "random_state": 2026
+  },
+  {
+    "hidden_dims": "64,32",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.005,
+    "random_state": 7
+  },
+  {
+    "hidden_dims": "96",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.004,
+    "random_state": 42
+  },
+  {
+    "hidden_dims": "96",
+    "epochs": 80,
+    "batch_size": 256,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "l2_penalty": 0.005,
+    "random_state": 7
+  }
+]
