@@ -82,7 +82,10 @@ export async function detectInsect(file) {
     return data;
   } catch (error) {
     if (error.name === "AbortError") {
-      throw new Error("Detection timed out. Please try a clearer or smaller image.");
+      throw new Error(
+        "Detection timed out. Please try a clearer or smaller image.",
+        { cause: error }
+      );
     }
 
     throw error;
