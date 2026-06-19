@@ -21,6 +21,12 @@ class Config:
         os.getenv("PORT", 5000)
     )
 
+    DEBUG = (
+        os.getenv("FLASK_DEBUG", "false")
+        .lower()
+        == "true"
+    )
+
     MODEL_ARTIFACT_PATH = os.getenv(
         "MODEL_ARTIFACT_PATH",
         "../ai/model/dinov2_bp_classifier.npz"
