@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { X, Upload, Camera, RefreshCw, ScanSearch } from "lucide-react";
 
-function UploadBox({ onFileSelect, onDetect, onReset }) {
+function UploadBox({ onFileSelect, onDetect, onReset, disabled = false }) {
   const inputRef = useRef(null);
   const cameraRef = useRef(null);
 
@@ -10,6 +10,7 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFile = (file) => {
+    if (disabled) return;
     if (!file) return;
 
     const imageUrl = URL.createObjectURL(file);
@@ -29,16 +30,19 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
+    if (disabled) return;
 
     const file = e.dataTransfer.files[0];
     handleFile(file);
   };
 
   const openFilePicker = () => {
+    if (disabled) return;
     inputRef.current?.click();
   };
 
   const openCamera = () => {
+    if (disabled) return;
     cameraRef.current?.click();
   };
 
@@ -49,6 +53,8 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
   };
 
   const removeImage = () => {
+    if (disabled) return;
+
     if (preview) {
       URL.revokeObjectURL(preview);
     }
@@ -64,7 +70,7 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
   };
 
   const handleDetect = () => {
-    if (onDetect && selectedFile) {
+    if (!disabled && onDetect && selectedFile) {
       onDetect(selectedFile);
     }
   };
@@ -142,11 +148,12 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
               {/* Primary — solid, full width on mobile */}
               <button
                 type="button"
+                disabled={disabled}
                 onClick={(e) => {
                   e.stopPropagation();
                   openFilePicker();
                 }}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 bg-cyan-700 hover:bg-cyan-800 text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 bg-cyan-700 hover:bg-cyan-800 disabled:bg-slate-300 text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
               >
                 <Upload size={16} />
                 Upload Photo
@@ -155,11 +162,12 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
               {/* Secondary — outline, full width on mobile */}
               <button
                 type="button"
+                disabled={disabled}
                 onClick={(e) => {
                   e.stopPropagation();
                   openCamera();
                 }}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 border-2 border-cyan-700 text-cyan-700 hover:bg-cyan-700 hover:text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 sm:py-2.5 border-2 border-cyan-700 text-cyan-700 hover:bg-cyan-700 hover:text-cyan-50 disabled:border-slate-300 disabled:text-slate-400 disabled:hover:bg-transparent font-medium rounded-lg transition-colors text-sm sm:text-base"
               >
                 <Camera size={16} />
                 Take Photo
@@ -177,6 +185,7 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
             {/* X button to clear image */}
             <button
               type="button"
+              disabled={disabled}
               onClick={(e) => {
                 e.stopPropagation();
                 removeImage();
@@ -203,8 +212,9 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
           {/* Change Photo — outline, secondary */}
           <button
             type="button"
+            disabled={disabled}
             onClick={openFilePicker}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 border-2 border-cyan-700 text-cyan-700 hover:bg-cyan-700 hover:text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 border-2 border-cyan-700 text-cyan-700 hover:bg-cyan-700 hover:text-cyan-50 disabled:border-slate-300 disabled:text-slate-400 disabled:hover:bg-transparent font-medium rounded-lg transition-colors text-sm sm:text-base"
           >
             <RefreshCw size={16} />
             Change Photo
@@ -213,8 +223,9 @@ function UploadBox({ onFileSelect, onDetect, onReset }) {
           {/* Detect! — primary, calls onDetect prop back to App.jsx */}
           <button
             type="button"
+            disabled={disabled}
             onClick={handleDetect}
-            className="w-full sm:flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 bg-cyan-700 hover:bg-cyan-800 text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
+            className="w-full sm:flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 bg-cyan-700 hover:bg-cyan-800 disabled:bg-slate-300 text-cyan-50 font-medium rounded-lg transition-colors text-sm sm:text-base"
           >
             <ScanSearch size={16} />
             Detect!

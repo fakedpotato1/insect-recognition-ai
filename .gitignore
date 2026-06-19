@@ -37,6 +37,7 @@ htmlcov/
 models/
 /features.csv
 .tmp/
+.tools/
 .pip-cache/
 /attempt.zip
 /outputs.rar

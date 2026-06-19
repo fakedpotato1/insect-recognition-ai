@@ -1,7 +1,13 @@
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
-load_dotenv()
+BACKEND_DIR = Path(__file__).resolve().parent
+REPO_ROOT = BACKEND_DIR.parent
+
+load_dotenv(REPO_ROOT / ".env")
+load_dotenv(BACKEND_DIR / ".env", override=True)
 
 
 class Config:
@@ -13,6 +19,12 @@ class Config:
 
     PORT = int(
         os.getenv("PORT", 5000)
+    )
+
+    DEBUG = (
+        os.getenv("FLASK_DEBUG", "false")
+        .lower()
+        == "true"
     )
 
     MODEL_ARTIFACT_PATH = os.getenv(
