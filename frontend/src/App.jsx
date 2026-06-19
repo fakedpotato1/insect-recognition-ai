@@ -2,7 +2,7 @@ import { useState } from "react";
 import UploadBox from "./components/UploadBox";
 import ResultModal from "./components/ResultModal";
 import logo from "../assets/logo.png";
-import { detectInsect } from "./api/detectApi";
+import { detectInsect } from "./api/DetectApi";
 
 function App() {
   const [result, setResult] = useState(null);
@@ -11,6 +11,8 @@ function App() {
   const [showModal, setShowModal] = useState(false);
 
   const handleDetect = async (file) => {
+    if (loading) return;
+
     setLoading(true);
     setResult(null);
     setError(null);
@@ -71,7 +73,7 @@ function App() {
 
             {/* UPLOAD BOX */}
             <div className="mt-4 sm:mt-6">
-              <UploadBox onDetect={handleDetect} onReset={handleReset} />
+              <UploadBox onDetect={handleDetect} onReset={handleReset} disabled={loading} />
             </div>
 
             {/* LOADING */}

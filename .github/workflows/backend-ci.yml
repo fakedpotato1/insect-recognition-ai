@@ -1,0 +1,47 @@
+name: Backend CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.5'
+
+      - name: Install Linting Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 numpy
+          if [ -f ai/requirements.txt ]; then
+            pip install -r ai/requirements.txt
+          fi
+          pip install -r backend/requirements.txt
+
+      - name: Lint Python with flake8
+        run: |
+          flake8 ai backend --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 ai backend --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Run Python unit tests
+        run: |
+          if [ -d backend/tests ]; then
+            python -m unittest discover -s backend/tests -p "*test*.py"
+          fi
+          if [ ! -d ai/tests ]; then
+            echo "No ai/tests directory found; skipping Python unit tests."
+            exit 0
+          fi
+          if ! find ai/tests -maxdepth 1 -type f -name "*tests.py" -print -quit | grep -q .; then
+            echo "No AI unit test files found; skipping Python unit tests."
+            exit 0
+          fi
+          touch ai/__init__.py ai/tests/__init__.py
+          python -m unittest discover -s ai/tests -p "*tests.py"
