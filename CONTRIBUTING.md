@@ -142,7 +142,7 @@ Hi username! You've successfully authenticated...
 
 # Clone the Project
 
-Choose a folder on your PC (for example `D:\Projects`).
+Choose a folder on your PC, such as a `Projects` folder under your user directory.
 
 Open Git Bash inside that folder and run:
 
