@@ -61,10 +61,12 @@ Planned algorithm responsibilities:
 
 ## Dataset
 
-The current planned image source is IP102, which contains pest and insect image
-categories suitable for multi-class classification experiments. Final processed
-features should be committed separately from the source images when the dataset
-task is ready.
+The dataset is sourced from Roboflow and is available as a fork at:
+
+**https://universe.roboflow.com/chingyang-tan/pest-detection-vuziq-mzuwk**
+
+It contains images of **20 common household insect classes** with **bounding box annotations** for object detection and preprocessing. Processed features are committed separately from the source images in `ai\feature_extraction\features.zip`
+
 
 ## Development
 
@@ -109,7 +111,7 @@ cp ./backend/.env.example ./backend/.env
 The backend runs at:
 
 ```text
-http://127.0.0.1:5000
+http://192.168.100.3:5000
 ```
 
 ### Frontend
@@ -119,17 +121,17 @@ Open a second terminal from the project root.
 ```bash
 cd frontend
 npm ci
-npm run dev -- --host 127.0.0.1 --port 5173
+npm run dev -- --host 192.168.100.3 --port 5173
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:5173/
+http://192.168.100.3:5173/
 ```
 
 The frontend sends uploaded images to the backend API at
-`http://127.0.0.1:5000`.
+`http://192.168.100.3:5000`.
 
 ### AI Tests
 
