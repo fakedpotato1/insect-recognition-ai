@@ -5,3 +5,7 @@ Pillow==11.1.0
 numpy
 opencv-python
 scikit-image
+torch
+torchvision
+transformers
+safetensors

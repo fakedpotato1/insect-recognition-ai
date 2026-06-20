@@ -21,15 +21,34 @@ def _resolve_artifact_path():
 
 
 def predict(image_base64: str):
-    from ai.inference import predict_base64_image
-
     artifact_path = _resolve_artifact_path()
     if not artifact_path.exists():
         raise NotImplementedError(
             "Model artifact is not available. Train it with "
-            "`python -m ai.inference.train_classifier features.csv --output "
-            "models/insect_classifier.npz` or set MODEL_ARTIFACT_PATH."
+            "`python ai/feature-new/train_bp_artifact.py --csv <features.csv> "
+            "--output ai/model/dinov2_bp_classifier.npz` or set "
+            "MODEL_ARTIFACT_PATH."
         )
+
+    feature_extractor = Config.MODEL_FEATURE_EXTRACTOR.lower()
+    if feature_extractor == "dinov2":
+        from ai.inference.dinov2_predictor import predict_base64_image_dinov2
+
+        return predict_base64_image_dinov2(
+            image_base64,
+            artifact_path=artifact_path,
+            localization_mode=Config.LOCALIZATION_MODE,
+            min_area_ratio=Config.LOCALIZATION_MIN_AREA_RATIO,
+            dinov2_model=Config.DINOV2_MODEL,
+            device=Config.DINOV2_DEVICE,
+        )
+
+    if feature_extractor != "classic":
+        raise ValueError(
+            "MODEL_FEATURE_EXTRACTOR must be 'dinov2' or 'classic'"
+        )
+
+    from ai.inference import predict_base64_image
 
     return predict_base64_image(
         image_base64,

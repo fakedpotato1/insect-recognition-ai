@@ -15,6 +15,11 @@ class MLPClassifier:
         output_dim,
         learning_rate=0.01,
         random_state=None,
+        optimizer="sgd",
+        beta1=0.9,
+        beta2=0.999,
+        epsilon=1e-8,
+        l2_penalty=0.0,
     ):
         if output_dim <= 1:
             raise ValueError("output_dim must be greater than 1 for classification")
@@ -23,6 +28,11 @@ class MLPClassifier:
         self.hidden_dims = [int(dim) for dim in hidden_dims]
         self.output_dim = int(output_dim)
         self.learning_rate = float(learning_rate)
+        self.optimizer = optimizer
+        self.beta1 = float(beta1)
+        self.beta2 = float(beta2)
+        self.epsilon = float(epsilon)
+        self.l2_penalty = float(l2_penalty)
         self.rng = np.random.default_rng(random_state)
 
         layer_dims = [self.input_dim] + self.hidden_dims + [self.output_dim]
@@ -35,6 +45,61 @@ class MLPClassifier:
             for i in range(len(layer_dims) - 1)
         ]
         self._hidden_z_cache = []
+        self._optimizer_step = 0
+        self._adam_state = [
+            {
+                "mw": np.zeros_like(layer.weights),
+                "vw": np.zeros_like(layer.weights),
+                "mb": np.zeros_like(layer.biases),
+                "vb": np.zeros_like(layer.biases),
+            }
+            for layer in self.layers
+        ]
+
+    def _regularized_grad_weights(self, layer):
+        if self.l2_penalty <= 0:
+            return layer.grad_weights
+        return layer.grad_weights + self.l2_penalty * layer.weights
+
+    def _apply_sgd(self):
+        for layer in self.layers:
+            grad_weights = self._regularized_grad_weights(layer)
+            layer.apply_gradients(
+                self.learning_rate * grad_weights,
+                self.learning_rate * layer.grad_biases,
+            )
+
+    def _apply_adam(self):
+        self._optimizer_step += 1
+        for layer, state in zip(self.layers, self._adam_state):
+            grad_weights = self._regularized_grad_weights(layer)
+            state["mw"] = self.beta1 * state["mw"] + (1.0 - self.beta1) * grad_weights
+            state["vw"] = (
+                self.beta2 * state["vw"]
+                + (1.0 - self.beta2) * np.square(grad_weights)
+            )
+            state["mb"] = self.beta1 * state["mb"] + (1.0 - self.beta1) * layer.grad_biases
+            state["vb"] = (
+                self.beta2 * state["vb"]
+                + (1.0 - self.beta2) * np.square(layer.grad_biases)
+            )
+
+            mw_hat = state["mw"] / (1.0 - self.beta1 ** self._optimizer_step)
+            vw_hat = state["vw"] / (1.0 - self.beta2 ** self._optimizer_step)
+            mb_hat = state["mb"] / (1.0 - self.beta1 ** self._optimizer_step)
+            vb_hat = state["vb"] / (1.0 - self.beta2 ** self._optimizer_step)
+
+            weight_step = self.learning_rate * mw_hat / (np.sqrt(vw_hat) + self.epsilon)
+            bias_step = self.learning_rate * mb_hat / (np.sqrt(vb_hat) + self.epsilon)
+            layer.apply_gradients(weight_step, bias_step)
+
+    def _apply_optimizer(self):
+        if self.optimizer == "sgd":
+            self._apply_sgd()
+        elif self.optimizer == "adam":
+            self._apply_adam()
+        else:
+            raise ValueError("optimizer must be 'sgd' or 'adam'")
 
     def _forward_logits(self, X):
         activations = np.asarray(X, dtype=float)
@@ -60,7 +125,10 @@ class MLPClassifier:
     def loss(self, X, y):
         logits = self._forward_logits(X)
         loss, _, _ = softmax_cross_entropy(logits, y)
-        return loss
+        if self.l2_penalty <= 0:
+            return loss
+        penalty = sum(np.sum(np.square(layer.weights)) for layer in self.layers)
+        return loss + 0.5 * self.l2_penalty * penalty
 
     def train_batch(self, X, y):
         logits = self._forward_logits(X)
@@ -71,8 +139,7 @@ class MLPClassifier:
             grad = grad * relu_derivative(self._hidden_z_cache[layer_index])
             grad = self.layers[layer_index].backward(grad)
 
-        for layer in self.layers:
-            layer.update(self.learning_rate)
+        self._apply_optimizer()
 
         return loss
 

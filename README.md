@@ -68,21 +68,68 @@ task is ready.
 
 ## Development
 
-### Backend
+### Prerequisites
+
+- Python 3.10 or newer
+- Node.js 20 or newer
+- npm
+- Git
+
+### Clone
 
 ```bash
-cd backend
-python -m pip install -r requirements.txt
-python app.py
+git clone https://github.com/fakedpotato1/insect-recognition-ai.git
+cd insect-recognition-ai
+```
+
+### Backend
+
+Open one terminal from the project root.
+
+PowerShell:
+
+```powershell
+python -m venv .venv-ml
+.\.venv-ml\Scripts\python.exe -m pip install --upgrade pip
+.\.venv-ml\Scripts\python.exe -m pip install -r .\backend\requirements.txt
+Copy-Item .\backend\.env.example .\backend\.env
+.\.venv-ml\Scripts\python.exe .\backend\app.py
+```
+
+macOS/Linux:
+
+```bash
+python3 -m venv .venv-ml
+./.venv-ml/bin/python -m pip install --upgrade pip
+./.venv-ml/bin/python -m pip install -r ./backend/requirements.txt
+cp ./backend/.env.example ./backend/.env
+./.venv-ml/bin/python ./backend/app.py
+```
+
+The backend runs at:
+
+```text
+http://127.0.0.1:5000
 ```
 
 ### Frontend
 
+Open a second terminal from the project root.
+
 ```bash
 cd frontend
 npm ci
-npm run dev
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
+
+Then open:
+
+```text
+http://127.0.0.1:5173/
+```
+
+The frontend sends uploaded images to the backend API at
+`http://127.0.0.1:5000`.
 
 ### AI Tests
 

@@ -11,6 +11,8 @@ function App() {
   const [showModal, setShowModal] = useState(false);
 
   const handleDetect = async (file) => {
+    if (loading) return;
+
     setLoading(true);
     setResult(null);
     setError(null);
@@ -71,7 +73,7 @@ function App() {
 
             {/* UPLOAD BOX */}
             <div className="mt-4 sm:mt-6">
-              <UploadBox onDetect={handleDetect} onReset={handleReset} />
+              <UploadBox onDetect={handleDetect} onReset={handleReset} disabled={loading} />
             </div>
 
             {/* LOADING */}
