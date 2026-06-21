@@ -111,7 +111,7 @@ cp ./backend/.env.example ./backend/.env
 The backend runs at:
 
 ```text
-http://192.168.100.3:5000
+http://127.0.0.1:5000
 ```
 
 ### Frontend
@@ -121,17 +121,17 @@ Open a second terminal from the project root.
 ```bash
 cd frontend
 npm ci
-npm run dev -- --host 192.168.100.3 --port 5173
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
 Then open:
 
 ```text
-http://192.168.100.3:5173/
+http://127.0.0.1:5000/
 ```
 
 The frontend sends uploaded images to the backend API at
-`http://192.168.100.3:5000`.
+`http://127.0.0.1:5000`.
 
 ### AI Tests
 
