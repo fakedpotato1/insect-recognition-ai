@@ -121,7 +121,7 @@ Open a second terminal from the project root.
 ```bash
 cd frontend
 npm ci
-npm run dev -- --host 127.0.0.1 --port 5173
+npm run dev -- --host 127.0.0.1 --port 5000
 ```
 
 Then open:
