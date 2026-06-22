@@ -409,24 +409,25 @@ function ResultModal({ result, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm px-3 pb-4 sm:px-4 sm:pb-0"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-3 sm:px-4"
       onClick={onClose}
     >
-      {/* Modal container — hidden scrollbar, rounded everywhere */}
+      {/* Outer wrapper: natural height so flex parent can truly center it */}
       <div
-        className="relative w-full max-w-sm sm:max-w-md rounded-2xl overflow-y-auto"
-        style={{
-          maxHeight: "92dvh",
-          scrollbarWidth: "none",        /* Firefox */
-          msOverflowStyle: "none",       /* IE/Edge */
-        }}
+        className="relative w-full max-w-sm sm:max-w-md rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Hide scrollbar for WebKit */}
         <style>{`.result-scroll::-webkit-scrollbar { display: none; }`}</style>
 
-        <div className="result-scroll">
-          {/* Confetti lives outside the card so it fills the modal area */}
+        {/* Inner div owns overflow + maxHeight so outer stays content-sized */}
+        <div
+          className="result-scroll overflow-y-auto rounded-2xl"
+          style={{
+            maxHeight: "92dvh",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
           {showConfetti && (
             <div className="absolute inset-0 pointer-events-none z-0 rounded-2xl overflow-hidden">
               <ConfettiBurst />
