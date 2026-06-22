@@ -61,12 +61,10 @@ Planned algorithm responsibilities:
 
 ## Dataset
 
-The dataset is sourced from Roboflow and is available as a fork at:
-
-**https://universe.roboflow.com/chingyang-tan/pest-detection-vuziq-mzuwk**
-
-It contains images of **20 common household insect classes** with **bounding box annotations** for object detection and preprocessing. Processed features are committed separately from the source images in `ai\feature_extraction\features.zip`
-
+The current planned image source is IP102, which contains pest and insect image
+categories suitable for multi-class classification experiments. Final processed
+features should be committed separately from the source images when the dataset
+task is ready.
 
 ## Development
 
@@ -127,7 +125,7 @@ npm run dev -- --host 127.0.0.1 --port 5173
 Then open:
 
 ```text
-http://127.0.0.1:5000/
+http://127.0.0.1:5173/
 ```
 
 The frontend sends uploaded images to the backend API at
