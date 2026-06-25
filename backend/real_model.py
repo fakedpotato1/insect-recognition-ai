@@ -25,7 +25,7 @@ def predict(image_base64: str):
     if not artifact_path.exists():
         raise NotImplementedError(
             "Model artifact is not available. Train it with "
-            "`python ai/feature-new/train_bp_artifact.py --csv <features.csv> "
+            "`python ai/training/train_bp_artifact.py --csv <features.csv> "
             "--output ai/model/dinov2_bp_classifier.npz` or set "
             "MODEL_ARTIFACT_PATH."
         )

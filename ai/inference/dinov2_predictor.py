@@ -54,6 +54,8 @@ def _extract_feature(image, processor, model, device):
     inputs = {key: value.to(device) for key, value in inputs.items()}
     with torch.inference_mode():
         outputs = model(**inputs)
+        # The CLS token is the 384-dimensional image descriptor used by the
+        # training CSV, so inference extracts and normalizes it the same way.
         vector = outputs.last_hidden_state[:, 0, :].detach().cpu().numpy()[0]
     norm = np.linalg.norm(vector)
     if norm > 1e-12:

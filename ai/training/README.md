@@ -1,42 +1,44 @@
-# BP 训练、调参与 baseline 复现说明
+# BP Training, Tuning, and Baseline Reproduction
 
-本目录保存用于复现实验的训练脚本、DINOv2 特征 CSV、调参配置和报告结果。当前前后端对接模型位于：
+This directory contains the training scripts, DINOv2 feature CSV, tuning
+configuration, and saved experiment results needed to reproduce the AI model.
+The model currently used by the backend is stored at:
 
 ```text
 ai/model/dinov2_bp_classifier.npz
 ```
 
-## 数据输入
+## Input Data
 
-手写 BP 训练使用已经提取好的 DINOv2 特征 CSV：
+The hand-written BP model is trained from the extracted DINOv2 feature CSV:
 
 ```text
 ai/training/data/pest_dinov2_features_fast.csv
 ```
 
-这条 CSV 的生成流程是：
+The feature-generation pipeline is:
 
 ```text
 Roboflow YOLO images
--> YOLO bbox crop
+-> YOLO bounding-box crop
 -> facebook/dinov2-small frozen feature extractor
--> 384-dim feature CSV
+-> 384-dimensional feature CSV
 ```
 
-配套文件：
+Supporting files:
 
 ```text
 ai/training/data/label_mapping.json
 ai/training/data/feature_stats.json
 ```
 
-## 最终模型训练线
+## Final Model Pipeline
 
-最终部署模型使用：
+The deployed model uses this pipeline:
 
 ```text
 DINOv2 feature CSV
--> train split mean/std normalization
+-> train-split mean/std normalization
 -> hand-written BP network
 -> hand-written Adam optimizer
 -> L2 regularization
@@ -44,7 +46,7 @@ DINOv2 feature CSV
 -> ai/model/dinov2_bp_classifier.npz
 ```
 
-最终配置：
+Final configuration:
 
 ```text
 hidden_dims: 96
@@ -56,7 +58,7 @@ random_state: 7
 best_epoch: 16
 ```
 
-最终指标：
+Final metrics:
 
 ```text
 train accuracy: 0.9907
@@ -65,7 +67,7 @@ test accuracy:  0.7758
 test macro F1:  0.7723
 ```
 
-## 复现 BP 调参
+## Reproduce BP Tuning
 
 ```powershell
 .\.venv-ml\Scripts\python.exe .\ai\training\tune_bp.py `
@@ -76,16 +78,19 @@ test macro F1:  0.7723
   --patience 14
 ```
 
-调参结果已保存到：
+Saved tuning results:
 
 ```text
 ai/training/results/bp_tuning_round1/
 ai/training/results/bp_tuning_round2/
 ```
 
-## 复现 PSO-BP / GA-BP
+## Reproduce PSO-BP and GA-BP
 
-PSO-BP 和 GA-BP 不是三套不同 BP 写法。它们复用同一个手写 `ai.neural_network.MLPClassifier`，区别是 PSO/GA 先搜索 BP 网络的初始权重，然后继续运行手写 BP + Adam。
+PSO-BP and GA-BP do not use separate BP implementations. They reuse the same
+hand-written `ai.neural_network.MLPClassifier`. The only difference is that PSO
+or GA first searches for better initial BP weights, then the same BP + Adam
+training process continues.
 
 ```powershell
 .\.venv-ml\Scripts\python.exe .\ai\training\run_pso_ga_bp.py `
@@ -104,13 +109,13 @@ PSO-BP 和 GA-BP 不是三套不同 BP 写法。它们复用同一个手写 `ai.
   --random-state 42
 ```
 
-结果已保存到：
+Saved results:
 
 ```text
 ai/training/results/pso_ga_bp/
 ```
 
-## 复现 baseline
+## Reproduce Baselines
 
 ```powershell
 .\.venv-ml\Scripts\python.exe .\ai\training\run_experiments.py `
@@ -126,14 +131,14 @@ ai/training/results/pso_ga_bp/
   --extra-trees 200
 ```
 
-报告可使用的两个 baseline：
+Report-ready baseline metrics:
 
 ```text
 GaussianNB test accuracy:              0.7100
 ExtraTrees-200-balanced test accuracy: 0.7428
 ```
 
-结果已保存到：
+Saved results:
 
 ```text
 ai/training/results/baselines_final/

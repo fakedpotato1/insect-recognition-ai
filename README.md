@@ -3,25 +3,24 @@
 ## Overview
 
 This project is an insect image recognition system for a practical AI
-coursework. The system is designed around traditional image features and
-hand-written machine learning algorithms instead of pre-trained deep learning
-models. Feature extraction can use external models, while the core classifier
-uses the project's BP neural network with PSO/GA weight initialization. KNN,
-decision tree, and Naive Bayes are kept as sklearn comparison baselines.
+coursework. The final pipeline uses a frozen DINOv2 feature extractor and a
+hand-written NumPy BP neural network classifier. PSO and GA are implemented as
+optional initial-weight optimizers for the same BP model, while KNN, decision
+tree, Naive Bayes, and Extra Trees are kept as comparison baselines.
 
 The target pipeline is:
 
 ```text
 Image input
   -> Image preprocessing
-  -> Feature extraction
-  -> GA/PSO weight initialization
-  -> NumPy BP neural network classifier
+  -> DINOv2 feature extraction
+  -> optional GA/PSO weight initialization
+  -> hand-written NumPy BP neural network classifier
   -> Prediction result and insect information
 ```
 
-The insect information database and extracted dataset files are expected to be
-added by separate project tasks.
+The deployed backend model artifact is stored in
+`ai/model/dinov2_bp_classifier.npz`.
 
 ## Architecture
 
@@ -30,7 +29,7 @@ insect-recognition-ai/
 |-- ai/          AI algorithms, baselines, optimization, evaluation, and tests
 |-- backend/     Flask API and model service integration
 |-- frontend/    Vite React user interface
-|-- docs/        Reports, design notes, and presentation material
+|-- docs/        API and production inference notes
 |-- README.md    Project overview and setup guide
 ```
 
@@ -59,13 +58,20 @@ Planned algorithm responsibilities:
 - `ai/evaluation/`: accuracy, confusion matrix, precision, recall, and F1
   metrics.
 
-## Dataset
+## Dataset and Features
 
 The dataset is sourced from Roboflow and is available as a fork at:
 
 **https://universe.roboflow.com/chingyang-tan/pest-detection-vuziq-mzuwk**
 
-It contains images of **20 common household insect classes** with **bounding box annotations** for object detection and preprocessing. Processed features are committed separately from the source images in `ai\feature_extraction\features.zip`
+It contains images of **20 common household insect classes** with bounding-box
+annotations for object detection and preprocessing. Source images are not
+required to run the submitted application. The reproducible DINOv2 feature CSV
+used for training and baseline comparison is stored at:
+
+```text
+ai/training/data/pest_dinov2_features_fast.csv
+```
 
 
 ## Development
@@ -121,13 +127,13 @@ Open a second terminal from the project root.
 ```bash
 cd frontend
 npm ci
-npm run dev -- --host 127.0.0.1 --port 5000
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:5000/
+http://127.0.0.1:5173/
 ```
 
 The frontend sends uploaded images to the backend API at
@@ -141,11 +147,20 @@ python -m unittest discover -s ai/tests -p "*_tests.py"
 
 ### Model Comparison
 
-After feature extraction writes a CSV file, compare the hand-written AI models
-against sklearn baselines with:
+Compare the hand-written BP model and sklearn baselines with:
 
-```bash
-python -m ai.experiments.model_comparison features.csv --label-column label
+```powershell
+.\.venv-ml\Scripts\python.exe .\ai\training\run_experiments.py `
+  --csv .\ai\training\data\pest_dinov2_features_fast.csv `
+  --output-dir .\ai\training\outputs\baselines_final `
+  --hidden-dims 96 `
+  --epochs 16 `
+  --batch-size 256 `
+  --learning-rate 0.001 `
+  --optimizer adam `
+  --l2-penalty 0.005 `
+  --random-state 7 `
+  --extra-trees 200
 ```
 
 ## Coursework Notes

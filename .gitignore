@@ -38,6 +38,7 @@ models/
 /features.csv
 .tmp/
 .tools/
+.cache/
 .pip-cache/
 /attempt.zip
 /outputs.rar
