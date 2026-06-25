@@ -104,6 +104,8 @@ def main():
     args = parse_args()
     X, y, splits, feature_names, class_names = load_feature_csv(args.csv)
     data = split_data(X, y, splits)
+    # Fit normalization on the train split only to avoid leaking validation or
+    # test statistics into the saved model artifact.
     mean, scale = normalization_stats(data["train"][0])
     norm_data = {
         split: (normalized(values[0], mean, scale), values[1])

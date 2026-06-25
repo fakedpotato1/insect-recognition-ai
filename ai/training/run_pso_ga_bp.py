@@ -275,6 +275,8 @@ def main():
         args.optimizer_samples_per_class,
         args.random_state,
     )
+    # PSO and GA evaluate many candidate weight vectors. A balanced subset keeps
+    # that search fast while still exposing every class to the fitness function.
 
     rows = [
         run_plain_bp(args, data, X.shape[1], output_dim),
