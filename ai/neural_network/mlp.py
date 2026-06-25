@@ -6,7 +6,11 @@ from ai.neural_network.losses import softmax_cross_entropy
 
 
 class MLPClassifier:
-    """Small multi-layer perceptron classifier with manual backpropagation."""
+    """Small multi-layer perceptron classifier with manual backpropagation.
+
+    The class intentionally avoids deep-learning frameworks so the forward
+    pass, backpropagation, L2 penalty, and Adam update are all visible in NumPy.
+    """
 
     def __init__(
         self,
@@ -84,6 +88,8 @@ class MLPClassifier:
                 + (1.0 - self.beta2) * np.square(layer.grad_biases)
             )
 
+            # Bias correction keeps early Adam updates from being too small
+            # because the moment vectors start from zeros.
             mw_hat = state["mw"] / (1.0 - self.beta1 ** self._optimizer_step)
             vw_hat = state["vw"] / (1.0 - self.beta2 ** self._optimizer_step)
             mb_hat = state["mb"] / (1.0 - self.beta1 ** self._optimizer_step)
@@ -134,6 +140,8 @@ class MLPClassifier:
         logits = self._forward_logits(X)
         loss, grad_logits, _ = softmax_cross_entropy(logits, y)
 
+        # Softmax cross-entropy starts the backward pass at the output logits;
+        # hidden layers then multiply by the ReLU derivative.
         grad = self.layers[-1].backward(grad_logits)
         for layer_index in range(len(self.layers) - 2, -1, -1):
             grad = grad * relu_derivative(self._hidden_z_cache[layer_index])
