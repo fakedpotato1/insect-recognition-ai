@@ -121,13 +121,13 @@ Open a second terminal from the project root.
 ```bash
 cd frontend
 npm ci
-npm run dev -- --host 127.0.0.1 --port 5000
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:5000/
+http://127.0.0.1:5173/
 ```
 
 The frontend sends uploaded images to the backend API at
